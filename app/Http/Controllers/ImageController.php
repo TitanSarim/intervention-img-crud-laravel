@@ -98,7 +98,44 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $product = Product::findOrFail($id);
+        
+        //  todo: for product storing in local folder
+        if ($request->hasFile('product_image')) {
+
+            // todo: If new image then delete previous one
+            $request->validate([
+                'product_image' => 'required | image | mimes:jpg,jpeg,svg,png'
+            ]);
+           
+            // * if file exist then delete other wise move
+            if(file_exists(public_path('/uploads/'.$product->product_image))) {
+
+                unlink(public_path('/uploads/'.$product->product_image));
+
+            }
+
+            $file = $request->file('product_image');
+
+            $extension = $file->extension();
+            $final = date('YmdHis').'.'.$extension; // todo: save file by data/time
+
+            // todo move file to folder
+            $file->move(public_path('/uploads'), $final);
+            $product->product_image = $final;
+
+        }
+
+        $request->validate([
+            'product_name' => 'required',
+            'product_price' => 'required',
+        ]);
+
+        $product->product_name = $request->product_name;
+        $product->product_price = $request->product_price;
+        $product->update();
+        return redirect()->route('image.index');
     }
 
     /**
@@ -109,6 +146,18 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        // * if file exist then delete 
+        if(file_exists(public_path('/uploads/'.$product->product_image))) {
+
+            unlink(public_path('/uploads/'.$product->product_image));
+
+        }
+
+        $product->delete();
+
+        return redirect()->route('image.index');
+
     }
 }

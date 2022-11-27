@@ -11,7 +11,7 @@
                 <form action="{{ route('image.update', $product->id) }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
-                    @method()
+                    @method('PUT')
                     
                     <div class="form-group" >
                       <label for="exampleInputEmail1">Product</label>
