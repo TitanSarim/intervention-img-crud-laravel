@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,6 @@ Route::get('/', function () {
 
 
 Route::resource('image', ImageController::class, ['names' => 'image']);
+
+// todo  intervestioon image
+Route::resource('student', StudentController::class, ['names' => 'student']);
